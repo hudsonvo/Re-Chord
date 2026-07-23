@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Keep environment variables out of version control
+.env
+
+# Next.js build output
+.next
+out
+
+# Misc
+.DS_Store
+*.log
+
+# AI coding assistant config/skills (not project source)
+.claude
+.agents
+.windsurf
+skills-lock.json
