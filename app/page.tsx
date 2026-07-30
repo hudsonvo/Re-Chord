@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col items-center px-6">
@@ -5,7 +6,9 @@ export default function Home() {
         {/* TODO: pitch copy */}
         <h1 className="text-4xl font-semibold">Re-Chord</h1>
         <p className="max-w-md">Rate and review the music you listen to.</p>
-        {/* TODO: CTA button linking to /signup */}
+        <Link href="/signup" className="rounded-full bg-foreground px-5 py-2 text-background">
+          Get Started
+        </Link>
       </section>
 
       <section className="w-full max-w-5xl py-12">
