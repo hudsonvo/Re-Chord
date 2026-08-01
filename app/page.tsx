@@ -1,4 +1,13 @@
 import Link from "next/link";
+import AlbumCard from "./components/AlbumCard";
+
+const placeholderAlbums = [
+  { title: "Album One", artist: "Artist One" },
+  { title: "Album Two", artist: "Artist Two" },
+  { title: "Album Three", artist: "Artist Three" },
+  { title: "Album Four", artist: "Artist Four" },
+];
+
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col items-center px-6">
@@ -12,9 +21,11 @@ export default function Home() {
       </section>
 
       <section className="w-full max-w-5xl py-12">
-        {/* TODO: section heading, e.g. "Popular this week" */}
+        <h2 className="mb-4 text-lg font-medium">Popular this week</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {/* TODO: map over placeholder albums array -> AlbumCard */}
+          {placeholderAlbums.map((album) => (
+            <AlbumCard key={album.title} title={album.title} artist={album.artist} />
+          ))}
         </div>
       </section>
     </main>
