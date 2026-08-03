@@ -12,7 +12,6 @@ export default function Navbar() {
         {/* TODO: real routes + styling once auth exists */}
         <Link href="/browse">Browse</Link>
         <Link href="/login">Sign in</Link>
-        <Link href="/signup">Sign up</Link>
       </div>
     </nav>
   );
