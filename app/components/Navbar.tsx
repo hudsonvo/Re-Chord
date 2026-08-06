@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { auth } from "@/auth";
+import UserMenu from "./UserMenu";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth();
+
   return (
     <nav className="flex items-center justify-between px-6 py-4">
       <Link href="/" className="font-semibold">
@@ -9,9 +13,12 @@ export default function Navbar() {
       </Link>
 
       <div className="flex items-center gap-4">
-        {/* TODO: real routes + styling once auth exists */}
         <Link href="/browse">Browse</Link>
-        <Link href="/login">Sign in</Link>
+        {session?.user ? (
+          <UserMenu name={session.user.name ?? "Account"} />
+        ) : (
+          <Link href="/login">Sign in</Link>
+        )}
       </div>
     </nav>
   );

@@ -5,16 +5,17 @@ import pool from "@/lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    Credentials({
+        Credentials({
       credentials: {
-        email: {},
+        identifier: {},
         password: {},
       },
       authorize: async (credentials) => {
         const result = await pool.query(
-          "SELECT * FROM users WHERE email = $1",
-          [credentials.email]
+          "SELECT * FROM users WHERE email = $1 OR username = $1",
+          [credentials.identifier]
         );
+
         const user = result.rows[0];
         if (!user) return null;
 

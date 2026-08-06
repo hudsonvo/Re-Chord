@@ -11,10 +11,17 @@ export async function signup(formData: FormData) {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await pool.query(
-        "INSERT INTO users (email, username, password_hash, display_name) VALUES ($1, $2, $3, $4)",
-        [email, username, passwordHash, username]
-    );
-
+    try {
+        await pool.query(
+            "INSERT INTO users (email, username, password_hash, display_name) VALUES ($1, $2, $3, $4)",
+            [email, username, passwordHash, username]
+        );
+    } catch (error) {
+        const pgError = error as { code?: string };
+        if (pgError.code === "23505") {
+            redirect("/signup?error=exists");
+        }
+        throw error;
+    }
     redirect("/login");
 }

@@ -8,9 +8,9 @@ export default function Login() {
         <h1 className="text-2xl font-semibold">Log in</h1>
 
         <input
-          type="email"
-          name="email"
-          placeholder="Email"
+          type="text"
+          name="identifier"
+          placeholder="Email or Username"
           className="rounded border border-zinc-300 px-3 py-2 dark:border-zinc-700"
         />
         <input
