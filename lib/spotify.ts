@@ -27,3 +27,23 @@ async function getAccessToken(): Promise<string> {
 
   return cachedToken.value;
 }
+
+
+export async function searchAlbums(query: string) {
+    const token = await getAccessToken();
+
+    const params = new URLSearchParams({
+        q: query,
+        type: "album",
+        limit: "10",
+    })
+
+    const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
+    const data = await response.json()
+    return data.albums.items
+}
