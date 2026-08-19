@@ -40,12 +40,72 @@ export async function searchAlbums(query: string, offset = 0) {
   });
 
 
-    const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
+  const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
         },
     })
 
     const data = await response.json()
     return data.albums.items
+}
+
+export async function searchArtists(query: string) {
+  const token = await getAccessToken();
+
+  const params = new URLSearchParams({
+    q: query,
+    type: "artist",
+    limit: "1",
+  });
+
+  const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+  return data.artists.items[0] ?? null;
+}
+
+export async function searchTracks(query: string) {
+  const token = await getAccessToken();
+
+  const params = new URLSearchParams({
+    q: query,
+    type: "track",
+    limit: "5",
+  });
+
+  const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+  return data.tracks.items;
+}
+
+export async function getArtistAlbums(artistId: string, offset = 0) {
+  const token = await getAccessToken();
+
+  const params = new URLSearchParams({
+    include_groups: "album,single",
+    limit: "10",
+    offset: String(offset),
+  });
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/artists/${artistId}/albums?${params}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data = await response.json();
+  return data.items;
 }
