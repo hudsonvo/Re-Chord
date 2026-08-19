@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { searchArtists, searchAlbums, searchTracks } from "@/lib/spotify";
-import AlbumResults from "../components/AlbumResults.tsx";
+import AlbumResults from "../components/AlbumResults";
 
 export default async function Browse({
   searchParams,
@@ -40,11 +41,16 @@ export default async function Browse({
           <h3 className="mb-2 text-sm font-medium text-zinc-500">Songs</h3>
           <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
             {tracks.map((track: any) => (
-              <li key={track.id} className="flex items-center gap-3 py-2">
-                <span className="font-medium">{track.name}</span>
-                <span className="text-sm text-zinc-500">
-                  {track.artists[0]?.name ?? "Unknown"}
-                </span>
+              <li key={track.id} className="py-2">
+                <Link
+                  href={`/tracks/${track.id}`}
+                  className="flex items-center gap-3 hover:underline"
+                >
+                  <span className="font-medium">{track.name}</span>
+                  <span className="text-sm text-zinc-500">
+                    {track.artists[0]?.name ?? "Unknown"}
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>

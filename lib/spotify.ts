@@ -88,6 +88,32 @@ export async function searchTracks(query: string) {
   return data.tracks.items;
 }
 
+export async function getAlbum(id: string) {
+  const token = await getAccessToken();
+
+  const response = await fetch(`https://api.spotify.com/v1/albums/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) return null;
+  return response.json();
+}
+
+export async function getTrack(id: string) {
+  const token = await getAccessToken();
+
+  const response = await fetch(`https://api.spotify.com/v1/tracks/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) return null;
+  return response.json();
+}
+
 export async function getArtistAlbums(artistId: string, offset = 0) {
   const token = await getAccessToken();
 

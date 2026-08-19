@@ -33,6 +33,7 @@ export default function AlbumResults({
         {albums.map((album) => (
           <AlbumCard
             key={album.id}
+            id={album.id}
             title={album.name}
             artist={album.artists[0]?.name ?? "Unknown"}
             coverUrl={album.images[0]?.url}

@@ -1,13 +1,15 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type AlbumCardProps = {
+  id?: string;
   title: string;
   artist: string;
   coverUrl?: string;
 };
 
-export default function AlbumCard({ title, artist, coverUrl }: AlbumCardProps) {
-  return (
+export default function AlbumCard({ id, title, artist, coverUrl }: AlbumCardProps) {
+  const content = (
     <div className="flex flex-col gap-2">
       <div className="relative aspect-square bg-zinc-200 dark:bg-zinc-800">
         {coverUrl && (
@@ -26,4 +28,8 @@ export default function AlbumCard({ title, artist, coverUrl }: AlbumCardProps) {
       </div>
     </div>
   );
+
+  if (!id) return content;
+
+  return <Link href={`/albums/${id}`}>{content}</Link>;
 }
