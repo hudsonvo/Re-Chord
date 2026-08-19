@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import pool from "@/lib/db";
-import { getAlbum } from "@/lib/spotify";
+import { getAlbum, getAlbumTracks } from "@/lib/spotify";
+import { formatDuration } from "@/lib/format";
 
 export default async function AlbumPage({
   params,
@@ -33,6 +35,8 @@ export default async function AlbumPage({
     album = inserted.rows[0];
   }
 
+  const tracks = await getAlbumTracks(album.spotify_id);
+
   return (
     <main className="flex flex-1 flex-col items-center px-6 py-12">
       <div className="relative aspect-square w-full max-w-xs bg-zinc-200 dark:bg-zinc-800">
@@ -51,6 +55,22 @@ export default async function AlbumPage({
       {album.release_date && (
         <p className="mt-1 text-sm text-zinc-500">{album.release_date}</p>
       )}
+
+      <ul className="mt-8 w-full max-w-md divide-y divide-zinc-200 dark:divide-zinc-800">
+        {tracks.map((track: any) => (
+          <li key={track.id}>
+            <Link
+              href={`/tracks/${track.id}`}
+              className="flex items-center justify-between gap-3 py-2 hover:underline"
+            >
+              <span>{track.name}</span>
+              <span className="text-sm text-zinc-500">
+                {formatDuration(track.duration_ms)}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }

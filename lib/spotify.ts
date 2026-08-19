@@ -114,6 +114,20 @@ export async function getTrack(id: string) {
   return response.json();
 }
 
+export async function getAlbumTracks(albumId: string) {
+  const token = await getAccessToken();
+
+  const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) return [];
+  const data = await response.json();
+  return data.items;
+}
+
 export async function getArtistAlbums(artistId: string, offset = 0) {
   const token = await getAccessToken();
 

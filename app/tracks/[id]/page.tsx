@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import pool from "@/lib/db";
 import { getTrack } from "@/lib/spotify";
+import { formatDuration } from "@/lib/format";
 
 export default async function TrackPage({
   params,
@@ -31,18 +32,11 @@ export default async function TrackPage({
     track = inserted.rows[0];
   }
 
-  const minutes = Math.floor(track.duration_ms / 60000);
-  const seconds = Math.floor((track.duration_ms % 60000) / 1000)
-    .toString()
-    .padStart(2, "0");
-
   return (
     <main className="flex flex-1 flex-col items-center px-6 py-12 text-center">
       <h1 className="text-2xl font-semibold">{track.title}</h1>
       <p className="text-zinc-500">{track.artist_name}</p>
-      <p className="mt-2 text-sm text-zinc-500">
-        {minutes}:{seconds}
-      </p>
+      <p className="mt-2 text-sm text-zinc-500">{formatDuration(track.duration_ms)}</p>
     </main>
   );
 }
