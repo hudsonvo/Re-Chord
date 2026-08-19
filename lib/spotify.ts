@@ -29,14 +29,16 @@ async function getAccessToken(): Promise<string> {
 }
 
 
-export async function searchAlbums(query: string) {
-    const token = await getAccessToken();
+export async function searchAlbums(query: string, offset = 0) {
+  const token = await getAccessToken();
 
-    const params = new URLSearchParams({
-        q: query,
-        type: "album",
-        limit: "10",
-    })
+  const params = new URLSearchParams({
+    q: query,
+    type: "album",
+    limit: "10",
+    offset: String(offset),
+  });
+
 
     const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
         headers: {
