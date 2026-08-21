@@ -149,3 +149,22 @@ export async function getArtistAlbums(artistId: string, offset = 0) {
   const data = await response.json();
   return data.items;
 }
+
+export async function findTrack(title: string, artist: string) {
+  const token = await getAccessToken();
+
+  const params = new URLSearchParams({
+    q: `track:${title} artist:${artist}`,
+    type: "track",
+    limit: "1",
+  });
+
+  const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+  return data.tracks.items[0] ?? null;
+}
