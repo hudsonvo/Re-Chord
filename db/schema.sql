@@ -37,6 +37,7 @@ CREATE TABLE reviews (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   rating     REAL NOT NULL,
   body       TEXT,
+  sentiment  TEXT NOT NULL CHECK (sentiment IN ('liked', 'fine', 'disliked')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   user_id    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
