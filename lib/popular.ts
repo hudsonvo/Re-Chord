@@ -3,7 +3,7 @@ import { getTopTracks } from "./lastfm";
 import { findTrack } from "./spotify";
 
 async function fetchPopularAlbums() {
-  const topTracks = await getTopTracks();
+  const topTracks = await getTopTracks(25);
 
   const matches = await Promise.all(
     topTracks.map((track: any) => findTrack(track.name, track.artist.name))
@@ -16,7 +16,7 @@ async function fetchPopularAlbums() {
     }
   }
 
-  return Array.from(albums.values()).slice(0, 4);
+  return Array.from(albums.values()).slice(0, 12);
 }
 
 export const getPopularAlbums = unstable_cache(fetchPopularAlbums, ["popular-albums"], {

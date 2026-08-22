@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import pool from "@/lib/db";
 import { getAlbum, getAlbumTracks } from "@/lib/spotify";
 import { formatDuration } from "@/lib/format";
+import { auth } from "@/auth";
+import RatingFlow from "@/app/components/RatingFlow";
+import { UNLOCK_THRESHOLD } from "@/lib/ranking";
 
 export default async function AlbumPage({
   params,
@@ -36,6 +39,23 @@ export default async function AlbumPage({
   }
 
   const tracks = await getAlbumTracks(album.spotify_id);
+  const session = await auth();
+
+  let ownReview = null;
+  let reviewCount = 0;
+
+  if (session?.user) {
+    const [reviewResult, countResult] = await Promise.all([
+      pool.query("SELECT rating FROM reviews WHERE user_id = $1 AND album_id = $2", [
+        session.user.id,
+        album.id,
+      ]),
+      pool.query("SELECT COUNT(*) FROM reviews WHERE user_id = $1", [session.user.id]),
+    ]);
+
+    ownReview = reviewResult.rows[0] ?? null;
+    reviewCount = Number(countResult.rows[0].count);
+  }
 
   return (
     <main className="flex flex-1 flex-col items-center px-6 py-12">
@@ -54,6 +74,29 @@ export default async function AlbumPage({
       <p className="text-zinc-500">{album.artist_name}</p>
       {album.release_date && (
         <p className="mt-1 text-sm text-zinc-500">{album.release_date}</p>
+      )}
+
+      {session?.user && (
+        <div className="mt-6">
+          {ownReview ? (
+            reviewCount >= UNLOCK_THRESHOLD ? (
+              <p className="text-lg font-medium">
+                Your rating: {ownReview.rating.toFixed(1)}
+              </p>
+            ) : (
+              <p className="text-sm text-zinc-500">
+                Rank {UNLOCK_THRESHOLD - reviewCount} more album
+                {UNLOCK_THRESHOLD - reviewCount === 1 ? "" : "s"} to unlock your ratings
+              </p>
+            )
+          ) : (
+            <RatingFlow
+              albumId={album.id}
+              albumTitle={album.title}
+              albumArtist={album.artist_name}
+            />
+          )}
+        </div>
       )}
 
       <ul className="mt-8 w-full max-w-md divide-y divide-zinc-200 dark:divide-zinc-800">

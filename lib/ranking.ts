@@ -1,5 +1,7 @@
 export type Sentiment = "liked" | "fine" | "disliked";
 
+export const UNLOCK_THRESHOLD = 5;
+
 const TIER_RANGES: Record<Sentiment, [number, number]> = {
   liked: [7.0, 10.0],
   fine: [4.0, 6.9],
