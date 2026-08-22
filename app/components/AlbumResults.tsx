@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import AlbumCard from "./AlbumCard";
-import { loadMoreAlbums } from "@/app/browse/actions";
+import { loadMoreAlbums } from "@/app/actions";
 
 type Album = {
   id: string;
