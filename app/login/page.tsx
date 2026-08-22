@@ -1,11 +1,23 @@
 import Link from "next/link";
 import { login } from "./actions";
 
-export default function Login() {
+export default async function Login({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+
   return (
     <main className="flex flex-1 flex-col items-center px-6 py-24">
       <form action={login} className="flex w-full max-w-sm flex-col gap-4">
         <h1 className="text-2xl font-semibold">Log in</h1>
+
+        {error && (
+          <p className="text-sm text-red-600 dark:text-red-400">
+            Incorrect email/username or password.
+          </p>
+        )}
 
         <input
           type="text"

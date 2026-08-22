@@ -1,14 +1,23 @@
 "use server";
 
-import {signIn} from "@/auth";
+import { AuthError } from "next-auth";
+import { signIn } from "@/auth";
+import { redirect } from "next/navigation";
 
 export async function login(formData: FormData) {
     const identifier = formData.get("identifier") as string;
     const password = formData.get("password") as string;
 
-    await signIn("credentials", {
-        identifier,
-        password,
-        redirectTo: "/",
-    });
+    try {
+        await signIn("credentials", {
+            identifier,
+            password,
+            redirectTo: "/",
+        });
+    } catch (error) {
+        if (error instanceof AuthError) {
+            redirect("/login?error=1");
+        }
+        throw error;
+    }
 }
