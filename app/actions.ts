@@ -4,9 +4,30 @@ import { signOut } from "@/auth";
 import { auth } from "@/auth";
 import pool from "@/lib/db";
 import { recomputeBucketScores, Sentiment } from "@/lib/ranking";
+import { searchAlbums } from "@/lib/spotify";
 
 export async function logout() {
   await signOut({ redirectTo: "/" });
+}
+
+export async function loadMoreAlbums(query: string, offset: number) {
+  return searchAlbums(query, offset);
+}
+
+export async function getBucketReviews(sentiment: Sentiment) {
+  const session = await auth();
+  if (!session?.user) return [];
+
+  const result = await pool.query(
+    `SELECT reviews.id, albums.title, albums.artist_name AS artist
+     FROM reviews
+     JOIN albums ON reviews.album_id = albums.id
+     WHERE reviews.user_id = $1 AND reviews.sentiment = $2
+     ORDER BY reviews.rating DESC`,
+    [session.user.id, sentiment]
+  );
+
+  return result.rows;
 }
 
 export async function submitReview({
